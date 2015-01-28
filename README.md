@@ -9,6 +9,8 @@
 Form builder for **Laravel 4** inspired by Symfony's form builder. With help of Laravels FormBuilder class creates forms that can be easy modified and reused.
 By default it supports Bootstrap 3.
 
+*Note*: This package was previously used from [laravel-form-builder](http://github.com/kristijanhusak/laravel-4ofm-builder) as `laravel-4` branch.
+
 ## Changelog
 Changelog can be found [here](https://github.com/kristijanhusak/laravel4-form-builder/blob/master/CHANGELOG.md)
 
