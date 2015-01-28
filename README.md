@@ -10,7 +10,7 @@ Form builder for **Laravel 4** inspired by Symfony's form builder. With help of 
 By default it supports Bootstrap 3.
 
 ## Changelog
-Changelog can be found [here](https://github.com/kristijanhusak/laravel-form-builder/blob/master/CHANGELOG.md)
+Changelog can be found [here](https://github.com/kristijanhusak/laravel4-form-builder/blob/master/CHANGELOG.md)
 
 ## Table of contents
 1. [Installation](#installation)
@@ -30,7 +30,7 @@ Changelog can be found [here](https://github.com/kristijanhusak/laravel-form-bui
 ``` json
 {
     "require": {
-        "kris/laravel-form-builder": "0.*"
+        "kris/laravel4-form-builder": "1.*"
     }
 }
 ```
