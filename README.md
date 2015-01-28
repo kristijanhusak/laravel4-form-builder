@@ -1,10 +1,10 @@
-[![Build Status](https://img.shields.io/travis/kristijanhusak/laravel-form-builder/master.svg?style=flat)](https://travis-ci.org/kristijanhusak/laravel-form-builder)
-[![Coverage Status](http://img.shields.io/scrutinizer/coverage/g/kristijanhusak/laravel-form-builder.svg?style=flat)](https://scrutinizer-ci.com/g/kristijanhusak/laravel-form-builder/?branch=laravel-4)
-[![Total Downloads](https://img.shields.io/packagist/dt/kris/laravel-form-builder.svg?style=flat)](https://packagist.org/packages/kris/laravel-form-builder)
-[![Latest Stable Version](https://img.shields.io/packagist/v/kris/laravel-form-builder.svg?style=flat)](https://packagist.org/packages/kris/laravel-form-builder)
+[![Build Status](https://img.shields.io/travis/kristijanhusak/laravel4-form-builder/master.svg?style=flat)](https://travis-ci.org/kristijanhusak/laravel4-form-builder)
+[![Coverage Status](http://img.shields.io/scrutinizer/coverage/g/kristijanhusak/laravel4-form-builder.svg?style=flat)](https://scrutinizer-ci.com/g/kristijanhusak/laravel4-form-builder/?branch=master)
+[![Total Downloads](https://img.shields.io/packagist/dt/kris/laravel4-form-builder.svg?style=flat)](https://packagist.org/packages/kris/laravel4-form-builder)
+[![Latest Stable Version](https://img.shields.io/packagist/v/kris/laravel4-form-builder.svg?style=flat)](https://packagist.org/packages/kris/laravel4-form-builder)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE)
 
-# Laravel form builder
+# Laravel 4 form builder
 
 Form builder for **Laravel 4** inspired by Symfony's form builder. With help of Laravels FormBuilder class creates forms that can be easy modified and reused.
 By default it supports Bootstrap 3.
@@ -601,7 +601,7 @@ As mentioned above, bootstrap 3 form classes are used. If you want to change the
 php artisan config:publish kris/laravel-form-builder
 ```
 This will create folder `kris` in `app/config/packages` folder which will contain
-[config.php](https://github.com/kristijanhusak/laravel-form-builder/blob/master/src/config/config.php) file.
+[config.php](https://github.com/kristijanhusak/laravel4-form-builder/blob/master/src/config/config.php) file.
 
 change values in `defaults` key as you wish.
 
@@ -613,7 +613,7 @@ php artisan view:publish kris/laravel-form-builder
 This will create folder with all files in `app/views/packages/kris/laravel-form-builder`
 
 Other way is to change path to the templates in the
-[config.php](https://github.com/kristijanhusak/laravel-form-builder/blob/master/src/config/config.php) file.
+[config.php](https://github.com/kristijanhusak/laravel4-form-builder4/blob/master/src/config/config.php) file.
 
 ``` php
 return [
@@ -717,7 +717,7 @@ class PostForm extends Form
 
 ### Contributing
 Project follows [PSR-2](http://www.php-fig.org/psr/psr-2/) standard and it's 100% covered with PHPUnit tests.
-Pull requests should include tests and pass [Travis CI](https://travis-ci.org/kristijanhusak/laravel-form-builder) build.
+Pull requests should include tests and pass [Travis CI](https://travis-ci.org/kristijanhusak/laravel4-form-builder) build.
 
 To run tests first install dependencies with `composer install`.
 
