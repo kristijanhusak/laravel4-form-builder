@@ -11,6 +11,9 @@ By default it supports Bootstrap 3.
 
 *Note*: This package was previously used from [laravel-form-builder](http://github.com/kristijanhusak/laravel-4ofm-builder) as `laravel-4` branch.
 
+## Laravel 5
+For laravel 5 version check [laravel-form-builder](https://github.com/kristijanhusak/laravel-form-builder)
+
 ## Changelog
 Changelog can be found [here](https://github.com/kristijanhusak/laravel4-form-builder/blob/master/CHANGELOG.md)
 
