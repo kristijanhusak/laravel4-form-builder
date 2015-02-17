@@ -1,3 +1,10 @@
+## 1.2.0
+- Change package namespace in service provider (was broken when config or views were published)
+- Allow adding child forms with full class name which will be instantiated automatically
+- Add FormBuilder class instance to the Form class
+- Setting label explicitly to false in the field options disables printing label for that field
+- Minor fixes
+
 ## 1.1.8
 - Dynamically access children in parent form types.
 

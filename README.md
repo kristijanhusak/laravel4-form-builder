@@ -35,7 +35,7 @@ Changelog can be found [here](https://github.com/kristijanhusak/laravel4-form-bu
 ``` json
 {
     "require": {
-        "kris/laravel4-form-builder": "1.*"
+        "kris/laravel4-form-builder": "~1.2"
     }
 }
 ```
@@ -118,15 +118,20 @@ Forms can be used in controller like this:
 <?php namespace Project\Http\Controllers;
 
 use Illuminate\Routing\Controller;
+use Kris\LaravelFormBuilder\FormBuilder;
 
 class SongsController extends BaseController {
 
-    /**
-     * @Get("/songs/create", as="song.create")
-     */
-    public function index()
+    protected $formBuilder;
+
+    public function __construct(FormBuilder $formBuilder)
     {
-        $form = \FormBuilder::create('Project\Forms\SongForm', [
+        $this->formBuilder = $formBuilder;
+    }
+
+    public function create()
+    {
+        $form = $this->formBuilder->create('Project\Forms\SongForm', [
             'method' => 'POST',
             'url' => route('song.store')
         ]);
@@ -134,9 +139,6 @@ class SongsController extends BaseController {
         return view('song.create', compact('form'));
     }
 
-    /**
-     * @Post("/songs", as="song.store")
-     */
     public function store()
     {
     }
@@ -245,12 +247,9 @@ If you need to quick create a small form that does not to be reused, you can use
 
 use Illuminate\Routing\Controller;
 
-class SongsController extends BaseController {
+class AuthController extends BaseController {
 
-    /**
-     * @Get("/login", as="login-page")
-     */
-    public function index()
+    public function login()
     {
         $form = \FormBuilder::plain([
             'method' => 'POST',
@@ -260,17 +259,13 @@ class SongsController extends BaseController {
         return view('auth.login', compact('form'));
     }
 
-    /**
-     * @Post("/login", as="login")
-     */
-    public function login()
+    public function postLogin()
     {
     }
 }
 ```
 
 ### Child form
-
 You can add one form as a child in another form. This will render all fields from that child form and wrap them in name provided:
 
 ``` php
@@ -285,23 +280,38 @@ class PostForm
     }
 }
 
+class GenderForm
+{
+    public function buildForm()
+    {
+        $this
+            ->add('gender', 'select', [
+                'choices' => $this->getData('genders')
+            ]);
+    }
+}
+
 class SongForm extends Form
 {
     public function buildForm()
     {
         $this
             ->add('name', 'text')
+            ->add('gender', 'form', [
+                'class' => 'App\Forms\GenderForm',
+                // Passed to gender form as data (same as calling addData($data) method),
+                // works only if class is passed as string
+                'data' => ['genders' => ['m' => 'Male', 'f' => 'Female']]
+            ])
             ->add('song', 'form', [
-                'class' => \FormBuilder::create('App\Forms\PostForm')
+                'class' => $this->formBuilder->create('App\Forms\PostForm')
             ])
             ->add('lyrics', 'textarea');
     }
 }
 ```
-
 So now song form will render this:
-
-``` html
+```html
     <div class="form-group">
         <label for="name" class="control-label">name</label>
         <input type="text" name="name" id="name">
@@ -355,6 +365,7 @@ class PostForm extends Form
             // This creates radio buttons
             ->add('gender', 'choice', [
                 'choices' => ['m' => 'Male', 'f' => 'Female'],
+                'label' => false,    // This forces hiding label, even when calling form_row
                 'selected' => 'm',
                 'expanded' => true
             ])
@@ -407,9 +418,6 @@ use App\Forms\PostForm;
 
 class PostsController extends BaseController {
 
-    /**
-     * @Get("/posts/{id}/edit", as="posts.edit")
-     */
     public function edit($id)
     {
         $post = Post::findOrFail($id);
@@ -424,9 +432,6 @@ class PostsController extends BaseController {
         return view('posts.edit', compact('form'));
     }
 
-    /**
-     * @Post("/posts/{id}", as="post.update")
-     */
     public function update($id)
     {
     }
@@ -519,9 +524,6 @@ use Illuminate\Routing\Controller;
 
 class PostsController extends BaseController {
 
-    /**
-     * @Get("/posts/{id}/edit", as="posts.edit")
-     */
     public function edit($id)
     {
         $model = Post::findOrFail($id);
@@ -562,9 +564,6 @@ class PostsController extends BaseController {
         return view('posts.edit', compact('form'));
     }
 
-    /**
-     * @Post("/posts/{id}", as="posts.update")
-     */
     public function update()
     {
     }
@@ -603,19 +602,38 @@ class PostForm extends Form
 
 As mentioned above, bootstrap 3 form classes are used. If you want to change the defaults you need to publish the config like this:
 ``` sh
-php artisan config:publish kris/laravel-form-builder
+php artisan config:publish kris/laravel4-form-builder
 ```
 This will create folder `kris` in `app/config/packages` folder which will contain
 [config.php](https://github.com/kristijanhusak/laravel4-form-builder/blob/master/src/config/config.php) file.
 
 change values in `defaults` key as you wish.
 
-If you want to customize the views for fields and forms you can publish the views like this:
-``` sh
-php artisan view:publish kris/laravel-form-builder
+If you would like to avoid typing in full namespace of the form class when creating, you can add default namespace to the config that was just published, and it will prepend it every time you want to create form:
+
+``` php
+<?php
+
+// config/packages/kris/laravel4-form-builder/config.php
+
+return [
+    'default_namespace' => 'App\Forms'
+]
+
+// app/Http/Controllers/HomeController
+
+public function indexAction()
+{
+    \FormBuilder::create('SongForm');
+}
 ```
 
-This will create folder with all files in `app/views/packages/kris/laravel-form-builder`
+If you want to customize the views for fields and forms you can publish the views like this:
+``` sh
+php artisan view:publish kris/laravel4-form-builder
+```
+
+This will create folder with all files in `app/views/packages/kris/laravel4-form-builder`
 
 Other way is to change path to the templates in the
 [config.php](https://github.com/kristijanhusak/laravel4-form-builder4/blob/master/src/config/config.php) file.
@@ -690,7 +708,7 @@ And then in view you can use what you need:
 
 **Notice:** Package templates uses plain PHP for printing because of plans for supporting version 4 (prevent conflict with tags), but you can use blade for custom fields, just make sure to use tags that are not escaping html (`{{ }}`)
 
-And then add it to published config file(`app/config/packages/kris/laravel-form-builder/config.php`) in key `custom-fields` key this:
+And then add it to published config file(`app/config/packages/kris/laravel4-form-builder/config.php`) in key `custom-fields` key this:
 
 ``` php
 // ...
