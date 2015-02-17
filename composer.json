@@ -16,6 +16,11 @@
         "phpunit/phpunit": "~4.0",
         "mockery/mockery": "0.9.*"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.2.x-dev"
+        }
+    },
     "autoload": {
         "psr-0": {
             "Kris\\LaravelFormBuilder": "src/"
