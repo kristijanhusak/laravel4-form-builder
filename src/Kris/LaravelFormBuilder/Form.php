@@ -1,6 +1,5 @@
 <?php namespace Kris\LaravelFormBuilder;
 
-use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Fields\FormField;
 
 class Form
@@ -14,9 +13,9 @@ class Form
     protected $fields = [];
 
     /**
-     * Eloquent model to use
+     * Model to use
      *
-     * @var Model
+     * @var mixed
      */
     protected $model = null;
 
@@ -32,7 +31,7 @@ class Form
      */
     protected $formOptions = [
         'method' => 'GET',
-        'url'    => null
+        'url' => null
     ];
 
     /**
@@ -62,6 +61,11 @@ class Form
      * @var null
      */
     protected $childFormName = null;
+
+    /**
+     * @var FormBuilder
+     */
+    protected $formBuilder;
 
     /**
      * Build the form
@@ -111,6 +115,7 @@ class Form
      * Remove field with specified name from the form
      *
      * @param $name
+     * @return $this
      */
     public function remove($name)
     {
@@ -119,7 +124,7 @@ class Form
             return $this;
         }
 
-        throw new \InvalidArgumentException('Field [' . $name . '] does not exist in ' . get_class($this));
+        throw new \InvalidArgumentException('Field ['.$name.'] does not exist in '.get_class($this));
     }
 
     /**
@@ -185,7 +190,7 @@ class Form
         }
 
         throw new \InvalidArgumentException(
-            'Field with name [' . $name . '] does not exist in class ' . get_class($this)
+            'Field with name ['. $name .'] does not exist in class '.get_class($this)
         );
     }
 
@@ -214,7 +219,7 @@ class Form
      * Get single form option
      *
      * @param string $option
-     * @param        $default
+     * @param $default
      * @return mixed
      */
     public function getFormOption($option, $default = null)
@@ -290,7 +295,7 @@ class Form
     /**
      * Get model that is bind to form object
      *
-     * @return Model
+     * @return mixed
      */
     public function getModel()
     {
@@ -300,10 +305,10 @@ class Form
     /**
      * Set model to form object
      *
-     * @param Model $model
+     * @param mixed $model
      * @return $this
      */
-    public function setModel(Model $model)
+    public function setModel($model)
     {
         $this->model = $model;
 
@@ -391,7 +396,7 @@ class Form
      * Add any aditional data that field needs (ex. array of choices)
      *
      * @param string $name
-     * @param mixed  $data
+     * @param mixed $data
      */
     public function setData($name, $data)
     {
@@ -438,8 +443,8 @@ class Form
     /**
      * Render the form
      *
-     * @param         $options
-     * @param         $fields
+     * @param $options
+     * @param $fields
      * @param boolean $showStart
      * @param boolean $showFields
      * @param boolean $showEnd
@@ -463,7 +468,7 @@ class Form
      */
     private function getModelFromOptions()
     {
-        if (array_get($this->formOptions, 'model') instanceof Model) {
+        if (array_get($this->formOptions, 'model')) {
             $this->setModel(array_pull($this->formOptions, 'model'));
         }
     }
@@ -495,7 +500,7 @@ class Form
     protected function preventDuplicate($name)
     {
         if ($this->has($name)) {
-            throw new \InvalidArgumentException('Field [' . $name . '] already exists in the form ' . get_class($this));
+            throw new \InvalidArgumentException('Field ['.$name.'] already exists in the form '.get_class($this));
         }
     }
 
@@ -534,7 +539,7 @@ class Form
     protected function getFieldName($name)
     {
         if ($this->isChildForm && $this->childFormName !== null) {
-            return $this->childFormName . '[' . $name . ']';
+            return $this->childFormName.'['.$name.']';
         }
 
         return $name;
@@ -544,7 +549,7 @@ class Form
      * Set up options on single field depending on form options
      *
      * @param string $name
-     * @param        $options
+     * @param $options
      */
     protected function setupFieldOptions($name, &$options)
     {
@@ -555,7 +560,7 @@ class Form
         $options['real_name'] = $name;
 
         if (!isset($options['label'])) {
-            $options['label'] = $name;
+            $options['label'] = $this->formHelper->formatLabel($name);
         }
     }
 
@@ -567,5 +572,27 @@ class Form
         if (array_get($this->formOptions, 'data')) {
             $this->addData(array_pull($this->formOptions, 'data'));
         }
+    }
+
+
+    /**
+     * Set form builder instance on helper so we can use it later
+     *
+     * @param FormBuilder $formBuilder
+     * @return $this
+     */
+    public function setFormBuilder(FormBuilder $formBuilder)
+    {
+        $this->formBuilder = $formBuilder;
+
+        return $this;
+    }
+
+    /**
+     * @return FormBuilder
+     */
+    public function getFormBuilder()
+    {
+        return $this->formBuilder;
     }
 }

@@ -13,7 +13,9 @@ class ChildFormType extends ParentType
     {
         return [
             'is_child' => true,
-            'class' => null
+            'class' => null,
+            'formOptions' => [],
+            'data' => []
         ];
     }
 
@@ -37,10 +39,27 @@ class ChildFormType extends ParentType
     {
         $class = array_get($this->options, 'class');
 
-        if ($class && $class instanceof Form) {
+        if (!$class) {
+            throw new \InvalidArgumentException(
+                'Please provide full name or instance of Form class.'
+            );
+        }
+
+        if (is_string($class)) {
+            return $this->parent->getFormBuilder()->create(
+                $class,
+                $this->getOption('formOptions'),
+                $this->getOption('data')
+            );
+        }
+
+        if ($class instanceof Form) {
             return $class;
         }
 
-        throw new \Exception('Please provide instance of Form class.');
+        throw new \InvalidArgumentException(
+            'Class provided does not exist or it passed in wrong format.'
+        );
+
     }
 }

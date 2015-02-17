@@ -6,17 +6,6 @@ use Kris\LaravelFormBuilder\Form;
 class ButtonTypeTest extends FormBuilderTestCase
 {
 
-    /**
-     * @var Form
-     */
-    protected $form;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->form = (new Form())->setFormHelper($this->formHelper);
-    }
-
     /** @test */
     public function it_creates_button()
     {
@@ -26,7 +15,8 @@ class ButtonTypeTest extends FormBuilderTestCase
 
         $expectedOptions = $this->getDefaults(
             ['class' => 'btn-class', 'type' => 'button', 'disabled' => 'disabled'],
-            'some_button'
+            'some_button',
+            'Some Button'
         );
 
         $expectedViewData = [
@@ -40,7 +30,7 @@ class ButtonTypeTest extends FormBuilderTestCase
 
         $this->fieldExpetations('button', $expectedViewData);
 
-        $button = new ButtonType('some_button', 'button', $this->form, $options);
+        $button = new ButtonType('some_button', 'button', $this->plainForm, $options);
 
         $button->render();
     }
@@ -48,11 +38,11 @@ class ButtonTypeTest extends FormBuilderTestCase
     /** @test */
     public function it_can_handle_object_with_getters_and_setters()
     {
-        $expectedOptions = $this->getDefaults(['type' => 'submit'], 'save');
+        $expectedOptions = $this->getDefaults(['type' => 'submit'], 'save', 'Save');
 
         $this->fieldExpetations('button', Mockery::any());
 
-        $button = new ButtonType('save', 'submit', $this->form);
+        $button = new ButtonType('save', 'submit', $this->plainForm);
 
         $this->assertEquals('save', $button->getName());
         $this->assertEquals('submit', $button->getType());
@@ -63,7 +53,7 @@ class ButtonTypeTest extends FormBuilderTestCase
         $button->setType('reset');
         $button->setOptions(['attr' => ['id' => 'button-id'], 'label' => 'Cancel it']);
 
-        $expectedOptions = $this->getDefaults(['type' => 'submit', 'id' => 'button-id'], 'Cancel it');
+        $expectedOptions = $this->getDefaults(['type' => 'submit', 'id' => 'button-id'], null, 'Cancel it');
 
         $this->assertEquals('cancel', $button->getName());
         $this->assertEquals('reset', $button->getType());
@@ -79,7 +69,8 @@ class ButtonTypeTest extends FormBuilderTestCase
     {
         $expectedOptions = $this->getDefaults(
             ['type' => 'submit'],
-            'some_submit'
+            'some_submit',
+            'Some Submit'
         );
 
         $expectedViewData = [
@@ -93,7 +84,7 @@ class ButtonTypeTest extends FormBuilderTestCase
 
         $this->fieldExpetations('button', $expectedViewData, 'custom-template');
 
-        $button = new ButtonType('some_submit', 'submit', $this->form, ['template' => 'custom-template']);
+        $button = new ButtonType('some_submit', 'submit', $this->plainForm, ['template' => 'custom-template']);
 
         $button->render();
     }

@@ -1,7 +1,7 @@
 <?php  namespace Kris\LaravelFormBuilder;
 
-use Illuminate\Http\Request;
 use Illuminate\View\Factory as View;
+use Illuminate\Http\Request;
 
 class FormHelper
 {
@@ -20,6 +20,11 @@ class FormHelper
      * @var Request
      */
     protected $request;
+
+    /**
+     * @var FormBuilder
+     */
+    protected $formBuilder;
 
     /**
      * All available field types
@@ -170,6 +175,7 @@ class FormHelper
 
         foreach ($options as $name => $option) {
             if ($option !== null) {
+                $name = is_numeric($name) ? $option : $name;
                 $attributes[] = $name.'="'.$option.'" ';
             }
         }
@@ -204,5 +210,20 @@ class FormHelper
                 $this->addCustomField($fieldName, $fieldClass);
             }
         }
+    }
+
+    /**
+     * Format the label to the proper format
+     *
+     * @param $name
+     * @return string
+     */
+    public function formatLabel($name)
+    {
+        if (!$name) {
+            return null;
+        }
+
+        return ucwords(str_replace('_', ' ', $name));
     }
 }

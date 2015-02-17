@@ -23,21 +23,46 @@ class FormBuilder
 
     /**
      * @param       $formClass
-     * @param array $options
-     * @param array $data
+     * @param       $options
+     * @param       $data
      * @return Form
      */
     public function create($formClass, array $options = [], array $data = [])
     {
+        $class = $this->getNamespaceFromConfig() . $formClass;
+
+        if (!class_exists($class)) {
+            throw new \InvalidArgumentException(
+                'Form class with name ' . $class . ' does not exist.'
+            );
+        }
+
         $form = $this->container
-            ->make($formClass)
+            ->make($class)
             ->setFormHelper($this->formHelper)
+            ->setFormBuilder($this)
             ->setFormOptions($options)
             ->addData($data);
 
         $form->buildForm();
 
         return $form;
+    }
+
+    /**
+     * Get the namespace from the config
+     *
+     * @return string
+     */
+    protected function getNamespaceFromConfig()
+    {
+        $namespace = $this->formHelper->getConfig('default_namespace');
+
+        if (!$namespace) {
+            return '';
+        }
+
+        return $namespace . '\\';
     }
 
     /**
@@ -52,6 +77,7 @@ class FormBuilder
         return $this->container
             ->make('Kris\LaravelFormBuilder\Form')
             ->setFormHelper($this->formHelper)
+            ->setFormBuilder($this)
             ->setFormOptions($options)
             ->addData($data);
     }

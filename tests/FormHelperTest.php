@@ -93,10 +93,29 @@ class FormHelperTest extends FormBuilderTestCase
     {
         $config = $this->config;
 
-        $config['custom_fields'][] = [
-            'datetime' => 'App\Forms\DatetimeType'
-        ];
+        $config['custom_fields']['datetime'] = 'App\Forms\DatetimeType';
 
         $formHelper = new FormHelper($this->view, $this->request, $config);
+
+        $this->assertEquals(
+            'App\Forms\DatetimeType',
+            $formHelper->getFieldType('datetime')
+        );
+    }
+
+    /** @test */
+    public function it_formats_the_label()
+    {
+        $this->assertEquals(
+            'Some Name',
+            $this->formHelper->formatLabel('some_name')
+        );
+
+        $this->assertEquals(
+            'Song',
+            $this->formHelper->formatLabel('song')
+        );
+
+        $this->assertNull($this->formHelper->formatLabel(false));
     }
 }
