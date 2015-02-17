@@ -326,7 +326,7 @@ class FormTest extends FormBuilderTestCase
     ) {
         $viewRenderer = Mockery::mock('Illuminate\Contracts\View\View');
 
-        $this->view->shouldReceive('make')->with('laravel-form-builder::form')
+        $this->view->shouldReceive('make')->with('laravel4-form-builder::form')
                    ->andReturn($viewRenderer);
 
 
@@ -360,7 +360,7 @@ class FormTest extends FormBuilderTestCase
             $viewRenderer->shouldReceive('render');
 
             $this->view->shouldReceive('make')
-                   ->with('laravel-form-builder::' . $view, Mockery::any())
+                   ->with('laravel4-form-builder::' . $view, Mockery::any())
                    ->andReturn($viewRenderer);
     }
 }

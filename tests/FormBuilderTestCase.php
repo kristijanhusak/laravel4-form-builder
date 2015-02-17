@@ -80,14 +80,14 @@ abstract class FormBuilderTestCase extends PHPUnit_Framework_TestCase {
         $this->plainForm = null;
     }
 
-    protected function fieldExpetations($name, $expectedViewData, $templatePrefix = 'laravel-form-builder::')
+    protected function fieldExpetations($name, $expectedViewData, $templatePrefix = 'laravel4-form-builder::')
     {
         $viewRenderer = Mockery::mock('Illuminate\Contracts\View\View');
         $viewRenderer->shouldReceive('render');
 
         $this->view->shouldReceive('make')
             ->with(
-               $templatePrefix == 'laravel-form-builder::' ? 'laravel-form-builder::'.$name : $templatePrefix,
+               $templatePrefix == 'laravel4-form-builder::' ? 'laravel4-form-builder::'.$name : $templatePrefix,
                $expectedViewData
             )
             ->andReturn($viewRenderer);

@@ -26,7 +26,7 @@ class FormBuilderServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('laravel-form-helper', function ($app) {
 
-            $configuration = $app['config']->get('laravel-form-builder::config');
+            $configuration = $app['config']->get('laravel4-form-builder::config');
 
             return new FormHelper($app['view'], $app['request'], $configuration);
         });
@@ -36,7 +36,7 @@ class FormBuilderServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        $this->package('kris/laravel-form-builder');
+        $this->package('kris/laravel4-form-builder');
     }
 
     /**
