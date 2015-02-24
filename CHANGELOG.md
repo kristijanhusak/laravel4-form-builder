@@ -1,3 +1,7 @@
+## 1.3.0
+- Add [Collection](https://github.com/kristijanhusak/laravel4-form-builder#collection) type
+- Minor fixes
+
 ## 1.2.0
 - Change package namespace in service provider (was broken when config or views were published)
 - Allow adding child forms with full class name which will be instantiated automatically

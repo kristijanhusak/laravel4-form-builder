@@ -9,16 +9,17 @@ return [
         'error_class'         => 'text-danger'
     ],
     // Templates
-    'form'          => 'laravel4-form-builder::form',
-    'text'          => 'laravel4-form-builder::text',
-    'textarea'      => 'laravel4-form-builder::textarea',
-    'button'        => 'laravel4-form-builder::button',
-    'radio'         => 'laravel4-form-builder::radio',
-    'checkbox'      => 'laravel4-form-builder::checkbox',
-    'select'        => 'laravel4-form-builder::select',
-    'choice'        => 'laravel4-form-builder::choice',
-    'repeated'      => 'laravel4-form-builder::repeated',
-    'child_form'    => 'laravel4-form-builder::child_form',
+    'form'          => 'laravel-form-builder::form',
+    'text'          => 'laravel-form-builder::text',
+    'textarea'      => 'laravel-form-builder::textarea',
+    'button'        => 'laravel-form-builder::button',
+    'radio'         => 'laravel-form-builder::radio',
+    'checkbox'      => 'laravel-form-builder::checkbox',
+    'select'        => 'laravel-form-builder::select',
+    'choice'        => 'laravel-form-builder::choice',
+    'repeated'      => 'laravel-form-builder::repeated',
+    'child_form'    => 'laravel-form-builder::child_form',
+    'collection'    => 'laravel-form-builder::collection',
 
     'default_namespace' => '',
 
