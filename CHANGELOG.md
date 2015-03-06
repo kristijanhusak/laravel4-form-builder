@@ -1,3 +1,7 @@
+## 1.3.4
+- Add `choice_options` property to `choice` field type that handles checkables when expanded and/or multiple is true.
+- Allow disabling wrapper for fields by setting it to `false`
+
 ## 1.3.3
 - Fix child form rebuild bug.
 
