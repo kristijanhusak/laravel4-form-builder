@@ -86,19 +86,6 @@ class Form
     }
 
     /**
-     * Reset the field names
-     */
-    public function rebuildFields()
-    {
-        foreach ($this->getFields() as $name => $field) {
-            $options = $field->getOptions();
-            $this->setupFieldOptions($name, $options);
-            $field->setName($this->getFieldName($name));
-            $field->setOptions($options);
-        }
-    }
-
-    /**
      * Add a single field to the form
      *
      * @param string $name
