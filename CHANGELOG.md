@@ -1,3 +1,12 @@
+## 1.3.3
+- Fix child form rebuild bug.
+
+## 1.3.2
+- Allow passing any type of model to form class (array, object, eloquent model, Collection).
+
+## 1.3.1
+- Fix bug where wrapper was not showing if label was false.
+
 ## 1.3.0
 - Add [Collection](https://github.com/kristijanhusak/laravel4-form-builder#collection) type
 - Minor fixes
