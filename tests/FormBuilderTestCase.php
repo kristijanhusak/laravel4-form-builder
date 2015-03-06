@@ -90,7 +90,7 @@ abstract class FormBuilderTestCase extends PHPUnit_Framework_TestCase {
         }
 
         if (!$templatePrefix) {
-            $templatePrefix = 'laravel-form-builder::'.$name;
+            $templatePrefix = 'laravel4-form-builder::'.$name;
         }
 
         $this->view->shouldReceive('make')
@@ -117,6 +117,8 @@ abstract class FormBuilderTestCase extends PHPUnit_Framework_TestCase {
     {
         $form->setFormHelper($this->formHelper)
             ->setFormBuilder($this->formBuilder);
+
+        $form->buildForm();
 
         return $form;
     }

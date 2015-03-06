@@ -91,10 +91,7 @@ class Form
     public function rebuildFields()
     {
         foreach ($this->getFields() as $name => $field) {
-            $options = $field->getOptions();
-            $this->setupFieldOptions($name, $options);
-            $field->setName($this->getFieldName($name));
-            $field->setOptions($options);
+            $this->add($name, $field->getType(), $field->getOptions(), true);
         }
     }
 

@@ -19,6 +19,9 @@ return [
     'choice'        => 'laravel4-form-builder::choice',
     'repeated'      => 'laravel4-form-builder::repeated',
     'child_form'    => 'laravel4-form-builder::child_form',
+    'collection'    => 'laravel4-form-builder::collection',
+
+    'default_namespace' => '',
 
     'custom_fields' => [
 //        'datetime' => 'App\Forms\Fields\Datetime'
