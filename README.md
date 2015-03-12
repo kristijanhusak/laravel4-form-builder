@@ -722,29 +722,40 @@ If you maybe want to customize how each radio/checkbox is rendered, maybe wrap i
     // ...
 ```
 
-Here is the list of all available field types:
-* email
-* url
-* tel
-* number
-* date
-* search
-* password
-* hidden
-* number
-* date
-* textarea
-* submit
-* reset
-* button
-* file
-* image
-* select
-* checkbox
-* radio
-* choice
-* form
-* repeated
+Here is a categorized list of all available field types:
+* Simple
+  * text
+  * textarea
+  * select
+  * choice
+  * checkbox
+  * radio
+  * password
+  * hidden
+  * file
+* Date and Time
+  * date
+  * datetime-local
+  * month
+  * time
+  * week
+* Special Purpose
+  * color
+  * search
+  * image
+  * email
+  * url
+  * tel
+  * number
+  * range
+* Buttons
+  * submit
+  * reset
+  * button
+* Form Builder Extensions
+  * form
+  * repeated
+  * collection
 
 You can also bind the model to the class and add other options with setters
 
