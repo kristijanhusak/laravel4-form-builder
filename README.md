@@ -753,9 +753,9 @@ Here is a categorized list of all available field types:
   * reset
   * button
 * Form Builder Extensions
-  * form
   * repeated
-  * collection
+  * [form](#child-form)
+  * [collection](#collection)
 
 You can also bind the model to the class and add other options with setters
 
