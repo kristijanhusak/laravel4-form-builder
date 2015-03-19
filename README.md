@@ -24,14 +24,15 @@ Changelog can be found [here](https://github.com/kristijanhusak/laravel4-form-bu
   2. [Usage in views](#usage-in-views)
 3. [Plain form](#plain-form)
 4. [Child Form](#child-form)
-5. [Collection](#collection)
+5. [Named Form](#named-form)
+6. [Collection](#collection)
   1. [Collection of child forms](#collection-of-child-forms)
   2. [Prototype](#prototype)
-6. [Field customization](#field-customization)
-7. [Changing configuration and templates](#changing-configuration-and-templates)
-8. [Custom fields](#custom-fields)
-9. [Contributing](#contributing)
-10. [Issues and bug reporting](#issues-and-bug-reporting)
+7. [Field customization](#field-customization)
+8. [Changing configuration and templates](#changing-configuration-and-templates)
+9. [Custom fields](#custom-fields)
+10. [Contributing](#contributing)
+11. [Issues and bug reporting](#issues-and-bug-reporting)
 
 ###Installation
 
@@ -333,6 +334,56 @@ So now song form will render this:
     </div>
 ```
 
+### Named form
+Named forms are very similar to child forms, only difference is that they are used as standalone forms.
+
+```php
+class PostForm
+{
+    // Can be changed when creating a form
+    protected $name = 'post';
+
+    public function buildForm()
+    {
+        $this
+            ->add('title', 'text', [
+                'label' => 'Post title'
+            ])
+            ->add('body', 'textarea', [
+                'label' => 'Post body'
+            ]);
+    }
+}
+
+class PostController {
+    public function createAction()
+    {
+        $form = FormBuilder::create('App\Forms\PostForm');
+
+        // Can be set from here in 2 ways:
+        // This allows flexibility to use only when needed
+        // 1. way:
+        $form = FormBuilder::create('App\Forms\PostForm', [
+            'name' => 'post'
+        ]);
+
+        // 2. way;
+        $form = FormBuilder::create('App\Forms\PostForm')->setName('post');
+    }
+}
+
+// View
+<div class="form-group">
+    <label for="title" class="control-label">Post title</label>
+    <textarea name="post[title]" id="title"></textarea>
+</div>
+<div class="form-group">
+    <label for="body" class="control-label">Post body</label>
+    <textarea name="post[body]" id="body"></textarea>
+</div>
+```
+
+
 ### Collection
 Collections are used for working with array of data, mostly used for relationships (OneToMany, ManyToMany).
 
@@ -505,7 +556,7 @@ If you need to dynamically generate HTML for additional elements in the collecti
                 e.preventDefault();
                 var container = $('.collection-container');
                 var count = container.children().length;
-                var proto = container.data('prototype').replace(/__NAME__/g, (count + 1));
+                var proto = container.data('prototype').replace(/__NAME__/g, count);
                 container.append(proto);
             });
         });
@@ -624,8 +675,7 @@ class PostForm extends Form
             // Creates 2 inputs. These are the defaults
             ->add('password', 'repeated', [
                 'type' => 'password'    // can be anything that fits <input type="type-here">
-                'first_name' => 'password',
-                'second_name' => 'password_confirmation',
+                'second_name' => 'password_confirmation', // defaults to name_confirmation
                 'first_options' => [],   // Same options available as for text type
                 'second_options' => [],   // Same options available as for text type
             ])
