@@ -1,3 +1,6 @@
+## 1.3.61
+- Fix choices to show only one error message
+
 ## 1.3.6
 - Update `repeated` type to work with child forms
 - Add possibility to create named forms (fields get name[fieldname])
