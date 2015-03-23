@@ -204,7 +204,7 @@ abstract class FormField
      * Get single option from options array. Can be used with dot notation ('attr.class')
      *
      * @param      $option
-     * @param null $default
+     * @param string $default
      * @return mixed
      */
     public function getOption($option, $default = null)

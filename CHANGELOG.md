@@ -1,3 +1,7 @@
+## 1.3.70
+- Fix form model binding for named forms
+- Collection type now pulls data from model if data not passed in `data` option
+
 ## 1.3.61
 - Fix choices to show only one error message
 
