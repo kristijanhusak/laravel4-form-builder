@@ -117,4 +117,17 @@ class FormHelperTest extends FormBuilderTestCase
 
         $this->assertNull($this->formHelper->formatLabel(false));
     }
+
+    /** @test */
+    public function it_converts_model_to_array()
+    {
+        $model = ['m' => 'male', 'f' => 'female'];
+        $collection = new \Illuminate\Support\Collection($model);
+
+        $collection = $this->formHelper->convertModelToArray($collection);
+        $sameModel = $this->formHelper->convertModelToArray($model);
+        $this->assertEquals($model, $collection);
+        $this->assertEquals($model, $sameModel);
+        $this->assertNull($this->formHelper->convertModelToArray([]));
+    }
 }

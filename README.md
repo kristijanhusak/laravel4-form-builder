@@ -403,7 +403,7 @@ class PostForm extends Form
             ->add('tags', 'collection', [
                 'type' => 'text',
                 'property' => 'name',    // Which property to use on the tags model for value, defualts to id
-                'data' => $this->model->tags        // If existing model is passed and it has tags, it will automatically populate data
+                'data' => [],            // Data is automatically bound from model, here we can override it
                 'options' => [    // these are options for a single type
                     'label' => false,
                     'attr' => ['class' => 'tag']
@@ -431,6 +431,10 @@ class MainController extends Controller
         //         ['id' => 2, 'name' => 'personal', 'desc' => 'For personal usage']
         //     ]
         // ]
+        
+        // Collection field type will automatically pull tags data from the model,
+        // If we want to override the data, we can pass `data` option to the field
+        
         $form = $formBuilder->create('App\Forms\PostForm', [
             'model' => $post
         ]);
@@ -491,7 +495,6 @@ class PostForm extends Form
             ->add('body', 'textarea')
             ->add('tags', 'collection', [
                 'type' => 'form',
-                'data' => $this->model->tags    // If existing model is passed and it has tags, it will automatically populate data
                 'options' => [    // these are options for a single type
                     'class' => 'App\Forms\TagsForm'
                     'label' => false,
@@ -594,7 +597,6 @@ class PostForm extends Form
             ->add('tags', 'collection', [
                 'type' => 'text',
                 'property' => 'name',
-                'data' => $this->model->tags,
                 'prototype' => true,            // Should prototype be generated. Default: true
                 'prototype_name' => '__NAME__' // Value used for replacing when generating new elements from prototype, default: __NAME__
                 'options' => [

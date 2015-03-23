@@ -1,6 +1,8 @@
 <?php  namespace Kris\LaravelFormBuilder;
 
 use Illuminate\View\Factory as View;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 
 class FormHelper
@@ -221,6 +223,24 @@ class FormHelper
 
         throw new \InvalidArgumentException('Custom field ['.$name.'] already exists on this form object.');
     }
+
+    public function convertModelToArray($model)
+    {
+        if (!$model) {
+            return null;
+        }
+
+        if ($model instanceof Model) {
+            return $model->toArray();
+        }
+
+        if ($model instanceof Collection) {
+            return $model->all();
+        }
+
+        return $model;
+    }
+
 
     /**
      * Load custom field types from config file
