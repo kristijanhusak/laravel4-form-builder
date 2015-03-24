@@ -39,7 +39,7 @@ Changelog can be found [here](https://github.com/kristijanhusak/laravel4-form-bu
 ``` json
 {
     "require": {
-        "kris/laravel4-form-builder": "~1.2"
+        "kris/laravel4-form-builder": "~1.3"
     }
 }
 ```
@@ -431,10 +431,10 @@ class MainController extends Controller
         //         ['id' => 2, 'name' => 'personal', 'desc' => 'For personal usage']
         //     ]
         // ]
-        
+
         // Collection field type will automatically pull tags data from the model,
         // If we want to override the data, we can pass `data` option to the field
-        
+
         $form = $formBuilder->create('App\Forms\PostForm', [
             'model' => $post
         ]);
