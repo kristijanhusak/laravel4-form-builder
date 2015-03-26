@@ -19,6 +19,15 @@ class ChildFormType extends ParentType
     }
 
     /**
+     * @inheritdoc
+     */
+    public function render(array $options = [], $showLabel = true, $showField = true, $showError = true)
+    {
+        $this->rebuild();
+        return parent::render($options, $showLabel, $showField, $showError);
+    }
+
+    /**
      * @return Form
      */
     public function getForm()
@@ -93,6 +102,10 @@ class ChildFormType extends ParentType
      */
     protected function getClassFromOptions()
     {
+        if ($this->form instanceof Form) {
+            return $this->form;
+        }
+
         $class = $this->getOption('class');
 
         if (!$class) {
@@ -116,5 +129,18 @@ class ChildFormType extends ParentType
         throw new \InvalidArgumentException(
             'Class provided does not exist or it passed in wrong format.'
         );
+    }
+
+    /**
+     * @param $method
+     * @param $arguments
+     *
+     * @return Form|null
+     */
+    public function __call($method, $arguments)
+    {
+        if (method_exists($this->form, $method)) {
+            return call_user_func_array([$this->form, $method], $arguments);
+        }
     }
 }
