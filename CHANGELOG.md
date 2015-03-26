@@ -1,3 +1,9 @@
+## 1.4.0
+- Allow calling form methods directly from child form
+- Update views to print all errors for single field
+- Fix custom field template for child forms
+- Fix disabling errors for fields in form class
+
 ## 1.3.70
 - Fix form model binding for named forms
 - Collection type now pulls data from model if data not passed in `data` option
