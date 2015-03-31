@@ -243,6 +243,21 @@ class Form
     }
 
     /**
+     * Set single form option on form
+     *
+     * @param string $option
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setFormOption($option, $value)
+    {
+        $this->formOptions[$option] = $value;
+
+        return $this;
+    }
+
+    /**
      * Set form options
      *
      * @param array $formOptions
@@ -601,6 +616,9 @@ class Form
         }
     }
 
+    /**
+     * Set namespace to model if form is named so the data is bound properly
+     */
     protected function setupNamedModel()
     {
         if (!$this->getModel() || !$this->getName()) {
