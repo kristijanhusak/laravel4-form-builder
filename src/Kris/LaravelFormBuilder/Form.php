@@ -363,6 +363,9 @@ class Form
     {
         $this->model = $model;
 
+        // Rebuild so new data is bound to the fields
+        $this->rebuildFields();
+
         return $this;
     }
 
