@@ -19,15 +19,6 @@ class ChildFormType extends ParentType
     }
 
     /**
-     * @inheritdoc
-     */
-    public function render(array $options = [], $showLabel = true, $showField = true, $showError = true)
-    {
-        $this->rebuild();
-        return parent::render($options, $showLabel, $showField, $showError);
-    }
-
-    /**
      * @return Form
      */
     public function getForm()
@@ -37,7 +28,6 @@ class ChildFormType extends ParentType
 
     /**
      * @param      $val
-     * @param bool $bindValues
      * @return $this
      */
     protected function setValue($val)
@@ -90,10 +80,8 @@ class ChildFormType extends ParentType
 
         $model = $this->getOption('default_value');
 
-        if ($model) {
-            foreach ($this->form->getFields() as $name => $field) {
-                $field->setValue($this->getModelValueAttribute($model, $name));
-            }
+        foreach ($this->form->getFields() as $name => $field) {
+            $field->setValue($this->getModelValueAttribute($model, $name));
         }
 
         $this->children = $this->form->getFields();

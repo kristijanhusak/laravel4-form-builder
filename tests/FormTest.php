@@ -13,9 +13,10 @@ class FormTest extends FormBuilderTestCase
         $this->plainForm
             ->add('name', 'text')
             ->add('description', 'textarea')
+            ->add('address', 'static')
             ->add('remember', 'checkbox');
 
-        $this->assertEquals(3, count($this->plainForm->getFields()));
+        $this->assertEquals(4, count($this->plainForm->getFields()));
 
         $this->assertTrue($this->plainForm->has('name'));
         $this->assertFalse($this->plainForm->has('body'));
@@ -36,6 +37,11 @@ class FormTest extends FormBuilderTestCase
         $this->assertInstanceOf(
             'Kris\LaravelFormBuilder\Fields\CheckableType',
             $this->plainForm->getField('remember')
+        );
+
+        $this->assertInstanceOf(
+            'Kris\LaravelFormBuilder\Fields\StaticType',
+            $this->plainForm->getField('address')
         );
     }
 
@@ -204,10 +210,15 @@ class FormTest extends FormBuilderTestCase
             $this->plainForm->getModel()
         );
 
-         $this->assertEquals(
-             ['this', 'is', 'some', 'data'],
-             $this->plainForm->getData('some_data')
-         );
+        $this->assertEquals(
+            ['this', 'is', 'some', 'data'],
+            $this->plainForm->getData('some_data')
+        );
+
+        $this->assertEquals(
+            $this->plainForm->getData(),
+            ['some_data' => ['this', 'is', 'some', 'data']]
+        );
 
         $this->assertEquals('test_name', $this->plainForm->getName());
     }
@@ -266,11 +277,44 @@ class FormTest extends FormBuilderTestCase
     }
 
     /** @test */
+    public function it_renders_rest_of_the_form_until_specified_field()
+    {
+        $options = [
+            'method' => 'GET',
+            'url' => '/some/url/10'
+        ];
+
+        $this->prepareFieldRender('select');
+        $this->prepareFieldRender('text');
+
+        $fields = [
+            new InputType('name', 'text', $this->plainForm),
+            new InputType('email', 'email', $this->plainForm),
+        ];
+
+        $this->prepareRender($options, false, true, true, $fields);
+
+        $this->plainForm->setFormOptions($options);
+
+        $this->plainForm
+            ->add('gender', 'select')
+            ->add('name', 'text')
+            ->add('email', 'email')
+            ->add('address', 'text');
+
+        $this->plainForm->gender->render();
+
+        $this->plainForm->renderUntil('email');
+        $this->assertEquals($this->plainForm->address->isRendered(), false);
+    }
+
+    /** @test */
     public function it_can_add_child_form_as_field()
     {
         $form = $this->setupForm(new Form());
         $customForm = $this->setupForm(new CustomDummyForm());
         $customForm->add('img', 'file');
+        $this->request->shouldReceive('old');
 
         $form
             ->add('title', 'text')
@@ -328,15 +372,21 @@ class FormTest extends FormBuilderTestCase
         $expectModel = [
             'test_name' => $model->all()
         ];
-        $this->plainForm->add('name', 'text');
+        $this->plainForm
+            ->add('name', 'text')
+            ->add('address', 'static');
+
         $this->assertEquals('name', $this->plainForm->getField('name')->getName());
+        $this->assertEquals('address', $this->plainForm->getField('address')->getName());
         $this->plainForm->setName('test_name')->setModel($model);
         $this->plainForm->rebuildFields();
         $this->prepareFieldRender('text');
+        $this->prepareFieldRender('static');
         $this->prepareRender(Mockery::any(), true, true, true, Mockery::any(), $expectModel);
         $this->plainForm->renderForm();
 
         $this->assertEquals('test_name[name]', $this->plainForm->getField('name')->getName());
+        $this->assertEquals('test_name[address]', $this->plainForm->getField('address')->getName());
         $this->assertEquals($expectModel, $this->plainForm->getModel());
     }
 

@@ -20,6 +20,7 @@ return [
     'repeated'      => 'laravel4-form-builder::repeated',
     'child_form'    => 'laravel4-form-builder::child_form',
     'collection'    => 'laravel4-form-builder::collection',
+    'static'        => 'laravel4-form-builder::static',
 
     'default_namespace' => '',
 
