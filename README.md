@@ -630,6 +630,11 @@ class PostForm extends Form
         $this
             ->add('name', 'text', [
                 'wrapper' => 'name-input-container',
+                'help_block' => [
+                    'text' => 'I am help text',  // If text is set, automatically adds help text under the field. Default: null
+                    'tag' => 'p'    // this is default,
+                    'attr' => ['class' => 'help-block']    // Default, class pulled from config file
+                ],
                 'attr' => ['class' => 'input-name', 'placeholder' => 'Enter name here...'],
                 'label' => 'Full name'
             ])
