@@ -56,6 +56,24 @@ abstract class FormField
     protected $formHelper;
 
     /**
+     * Name of the property for default value
+     *
+     * @var string
+     */
+    protected $valueProperty = 'default_value';
+
+    /**
+     * Is default value set?
+     * @var bool
+     */
+    protected $hasDefault = false;
+
+    /**
+     * @var \Closure|null
+     */
+    protected $valueClosure = null;
+
+    /**
      * @param             $name
      * @param             $type
      * @param Form        $parent
@@ -69,6 +87,19 @@ abstract class FormField
         $this->formHelper = $this->parent->getFormHelper();
         $this->setTemplate();
         $this->setDefaultOptions($options);
+
+        $defaultValue = $this->getOption($this->valueProperty);
+        $isChild = $this->getOption('is_child');
+
+        if ($defaultValue instanceof \Closure) {
+            $this->valueClosure = $defaultValue;
+        }
+
+        if ((!$defaultValue || $defaultValue instanceof \Closure) && !$isChild) {
+            $this->setValue($this->getModelValueAttribute($this->parent->getModel(), $name));
+        } elseif (!$isChild) {
+            $this->hasDefault = true;
+        }
     }
 
     /**
@@ -87,11 +118,24 @@ abstract class FormField
      */
     public function render(array $options = [], $showLabel = true, $showField = true, $showError = true)
     {
+        $passedDefault = null;
+
         if ($showField) {
             $this->rendered = true;
         }
 
+        // Check if default value is passed to render function from view.
+        // If it is, we save it to a variable and then override it before
+        // rendering the view
+        if ($defaultVal = array_get($options, $this->valueProperty)) {
+            $passedDefault = $defaultVal;
+        }
+
         $options = $this->prepareOptions($options);
+
+        if ($passedDefault) {
+            $options[$this->valueProperty] = $passedDefault;
+        }
 
         if (!$this->needsLabel($options)) {
             $showLabel = false;
@@ -125,7 +169,9 @@ abstract class FormField
     protected function getModelValueAttribute($model, $name)
     {
         $transformedName = $this->transformKey($name);
-        if (is_object($model)) {
+        if (is_string($model)) {
+            return $model;
+        } elseif (is_object($model)) {
             return object_get($model, $transformedName);
         } elseif (is_array($model)) {
             return array_get($model, $transformedName);
@@ -165,6 +211,12 @@ abstract class FormField
 
         if ($this->getOption('attr.multiple')) {
             $this->name = $this->name.'[]';
+        }
+
+        if ($this->getOption('required') === true) {
+            $options['label_attr']['class'] .= ' ' . $this->formHelper
+                ->getConfig('defaults.required_class', 'required');
+            $options['attr']['required'] = 'required';
         }
 
         $options['wrapperAttrs'] = $helper->prepareAttributes($options['wrapper']);
@@ -337,11 +389,24 @@ abstract class FormField
     }
 
     /**
-     * @param $val
+     * @param $value
+     * @return $this
      */
-    protected function setValue($val)
+    protected function setValue($value)
     {
-        $this->options['default_value'] = $val;
+        if ($this->hasDefault) {
+            return $this;
+        }
+
+        $closure = $this->valueClosure;
+
+        if ($closure instanceof \Closure) {
+            $this->options[$this->valueProperty] = $closure($value ?: []);
+        } else {
+            $this->options[$this->valueProperty] = $value;
+        }
+
+        return $this;
     }
 
     /**

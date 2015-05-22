@@ -17,7 +17,7 @@ class Form
      *
      * @var mixed
      */
-    protected $model = null;
+    protected $model = [];
 
     /**
      * @var FormHelper
@@ -68,6 +68,13 @@ class Form
     protected $exclude = [];
 
     /**
+     * Are form being rebuilt?
+     *
+     * @var bool
+     */
+    protected $rebuilding = false;
+
+    /**
      * Build the form
      *
      * @return mixed
@@ -81,24 +88,17 @@ class Form
      */
     public function rebuildForm()
     {
-        $this->fields = [];
-        return $this->buildForm();
-    }
-
-    /**
-     * Rebuild the fields
-     */
-    public function rebuildFields()
-    {
-        foreach ($this->getFields() as $name => $field) {
-            $options = $field->getOptions();
-            // Remove id attribute if form is named so we can link it
-            // properly to label
-            if ($this->getName() && $field->getOption('attr.id') === $name) {
-                unset($options['attr']['id']);
+        $this->rebuilding = true;
+        // If form is plain, buildForm method is empty, so we need to take
+        // existing fields and add them again
+        if (get_class($this) === 'Kris\LaravelFormBuilder\Form') {
+            foreach ($this->fields as $name => $field) {
+                $this->add($name, $field->getType(), $field->getOptions());
             }
-            $this->add($name, $field->getType(), $options, true);
+        } else {
+            $this->buildForm();
         }
+        $this->rebuilding = false;
     }
 
     /**
@@ -118,8 +118,12 @@ class Form
             );
         }
 
-        if (!$modify) {
+        if (!$modify && !$this->rebuilding) {
             $this->preventDuplicate($name);
+        }
+
+        if ($this->rebuilding && !$this->has($name)) {
+            return $this;
         }
 
         $this->setupFieldOptions($name, $options);
@@ -129,6 +133,60 @@ class Form
         $fieldType = $this->getFieldType($type);
 
         $this->fields[$name] = new $fieldType($fieldName, $type, $this, $options);
+
+        return $this;
+    }
+
+    /**
+     * Add field before another field
+     *
+     * @param string  $name         Name of the field before which new field is added
+     * @param string  $fieldName    Field name which will be added
+     * @param string  $type
+     * @param array   $options
+     * @param boolean $modify
+     * @return $this
+     */
+    public function addBefore($name, $fieldName, $type = 'text', $options = [], $modify = false)
+    {
+        $field = $this->getField($name);
+        $offset = array_search($name, array_keys($this->fields));
+
+        $beforeFields = array_slice($this->fields, 0, $offset);
+        $afterFields = array_slice($this->fields, $offset);
+
+        $this->fields = $beforeFields;
+
+        $this->add($fieldName, $type, $options, $modify);
+
+        $this->fields += $afterFields;
+
+        return $this;
+    }
+
+    /**
+     * Add field before another field
+
+     * @param string  $name         Name of the field after which new field is added
+     * @param string  $fieldName    Field name which will be added
+     * @param string  $type
+     * @param array   $options
+     * @param boolean $modify
+     * @return $this
+     */
+    public function addAfter($name, $fieldName, $type = 'text', $options = [], $modify = false)
+    {
+        $field = $this->getField($name);
+        $offset = array_search($name, array_keys($this->fields));
+
+        $beforeFields = array_slice($this->fields, 0, $offset + 1);
+        $afterFields = array_slice($this->fields, $offset + 1);
+
+        $this->fields = $beforeFields;
+
+        $this->add($fieldName, $type, $options, $modify);
+
+        $this->fields += $afterFields;
 
         return $this;
     }
@@ -364,13 +422,14 @@ class Form
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
 
-        $this->rebuildFields();
+        $this->rebuildForm();
 
         return $this;
     }
@@ -396,9 +455,6 @@ class Form
         $this->model = $model;
 
         $this->setupNamedModel();
-
-        // Rebuild so new data is bound to the fields
-        $this->rebuildFields();
 
         return $this;
     }
@@ -699,11 +755,10 @@ class Form
     }
 
     /**
-     * Exclude passed fields from rendering
+     * Exclude some fields from rendering
      *
-     * @return void
-     * @author
-     **/
+     * @return $this
+     */
     public function exclude(array $fields)
     {
         $this->exclude = array_merge($this->exclude, $fields);

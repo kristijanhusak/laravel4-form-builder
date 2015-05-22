@@ -39,7 +39,7 @@ Changelog can be found [here](https://github.com/kristijanhusak/laravel4-form-bu
 ``` json
 {
     "require": {
-        "kris/laravel4-form-builder": "~1.4"
+        "kris/laravel4-form-builder": "1.5.*"
     }
 }
 ```
@@ -70,7 +70,7 @@ And Facade (also in `config/app.php`)
 Creating form classes is easy. Lets assume PSR-4 is set for loading namespace `Project` in `app/Project` folder. With a simple artisan command we can create form:
 
 ``` sh
-    php artisan form:make app/Project/Forms/PostForm
+    php artisan make:form app/Project/Forms/PostForm
 ```
 
 you create form class in path `app/Project/Forms/PostForm.php` that looks like this:
@@ -92,7 +92,7 @@ class PostForm extends Form
 You can add fields which you want when creating command like this:
 
 ``` sh
-php artisan form:make app/Project/Forms/SongForm --fields="name:text, lyrics:textarea, publish:checkbox"
+php artisan make:form app/Project/Forms/SongForm --fields="name:text, lyrics:textarea, publish:checkbox"
 ```
 
 And that will create form in path `app/Project/Forms/SongForm.php` with content:
@@ -664,8 +664,10 @@ class PostForm extends Form
             ])
             // This creates a checkbox list
             ->add('languages', 'choice', [
-                'choices' => ['en' => 'English', 'de' => 'German', 'fr' => 'France'],
-                'selected' => ['en', 'de']
+                'choices' => [['id' => 1, 'en' => 'English'], ['id' => 2, 'de' => 'German'], ['id' => 3, 'fr' => 'France']],
+                'selected' => function ($data) { // Allows handling data before passed to view for setting default values. Useful for related models
+                    return array_pluck($data, 'id');
+                }
                 'expanded' => true,
                 'multiple' => true
             ])

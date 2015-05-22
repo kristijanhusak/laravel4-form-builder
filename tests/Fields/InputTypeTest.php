@@ -11,20 +11,23 @@ class InputTypeTest extends FormBuilderTestCase
     {
         $options = [
             'default_value' => 12,
+            'required' => true,
             'help_block' => [
                 'text' => 'this is help'
             ]
         ];
 
         $expectedOptions = $this->getDefaults(
-            [],
+            ['required' => 'required'],
             'hidden_id',
             'Hidden Id',
-            12,
+            13,
             'this is help'
         );
 
         $expectedOptions['help_block']['helpBlockAttrs'] = 'class="help-block" ';
+        $expectedOptions['required'] = true;
+        $expectedOptions['label_attr']['class'] .= ' required';
 
         $expectedViewData = [
             'name' => 'hidden_id',
@@ -40,6 +43,6 @@ class InputTypeTest extends FormBuilderTestCase
 
         $hidden = new InputType('hidden_id', 'hidden', $this->plainForm, $options);
 
-        $hidden->render();
+        $hidden->render(['default_value' => 13]);
     }
 }
