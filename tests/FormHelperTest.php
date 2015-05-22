@@ -1,6 +1,7 @@
 <?php
 
 use Kris\LaravelFormBuilder\FormHelper;
+use Illuminate\Support\Collection;
 
 class FormHelperTest extends FormBuilderTestCase
 {
@@ -124,7 +125,7 @@ class FormHelperTest extends FormBuilderTestCase
     public function it_converts_model_to_array()
     {
         $model = ['m' => 'male', 'f' => 'female'];
-        $collection = new \Illuminate\Support\Collection($model);
+        $collection = new Collection($model);
 
         $collection = $this->formHelper->convertModelToArray($collection);
         $sameModel = $this->formHelper->convertModelToArray($model);

@@ -228,6 +228,20 @@ class FormHelper
         throw new \InvalidArgumentException('Custom field ['.$name.'] already exists on this form object.');
     }
 
+    /**
+     * Load custom field types from config file
+     */
+    private function loadCustomTypes()
+    {
+        $customFields = (array) $this->getConfig('custom_fields');
+
+        if (!empty($customFields)) {
+            foreach ($customFields as $fieldName => $fieldClass) {
+                $this->addCustomField($fieldName, $fieldClass);
+            }
+        }
+    }
+
     public function convertModelToArray($model)
     {
         if (!$model) {
@@ -243,21 +257,6 @@ class FormHelper
         }
 
         return $model;
-    }
-
-
-    /**
-     * Load custom field types from config file
-     */
-    private function loadCustomTypes()
-    {
-        $customFields = (array) $this->getConfig('custom_fields');
-
-        if (!empty($customFields)) {
-            foreach ($customFields as $fieldName => $fieldClass) {
-                $this->addCustomField($fieldName, $fieldClass);
-            }
-        }
     }
 
     /**

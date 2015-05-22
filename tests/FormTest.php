@@ -2,7 +2,6 @@
 
 use Kris\LaravelFormBuilder\Fields\InputType;
 use Kris\LaravelFormBuilder\Form;
-use Illuminate\Contracts\View\View;
 
 class FormTest extends FormBuilderTestCase
 {
@@ -44,6 +43,79 @@ class FormTest extends FormBuilderTestCase
             $this->plainForm->getField('address')
         );
     }
+
+    /** @test */
+    public function it_adds_after_some_field()
+    {
+        $this->plainForm
+            ->add('name', 'text')
+            ->add('description', 'textarea');
+
+        $descIndexBefore = array_search(
+            'description',
+            array_keys($this->plainForm->getFields())
+        );
+
+        $this->assertEquals(1, $descIndexBefore);
+        $this->assertNull($this->plainForm->address);
+
+        $this->plainForm->addAfter('name', 'address');
+
+        $descIndexAfter = array_search(
+            'description',
+            array_keys($this->plainForm->getFields())
+        );
+
+        $addressIndex = array_search(
+            'address',
+            array_keys($this->plainForm->getFields())
+        );
+
+        $this->assertEquals(2, $descIndexAfter);
+        $this->assertEquals(1, $addressIndex);
+
+        $this->assertInstanceOf(
+            'Kris\LaravelFormBuilder\Fields\InputType',
+            $this->plainForm->address
+        );
+    }
+
+    /** @test */
+    public function it_adds_before_some_field()
+    {
+        $this->plainForm
+            ->add('name', 'text')
+            ->add('description', 'textarea');
+
+        $descIndexBefore = array_search(
+            'description',
+            array_keys($this->plainForm->getFields())
+        );
+
+        $this->assertEquals(1, $descIndexBefore);
+        $this->assertNull($this->plainForm->address);
+
+        $this->plainForm->addBefore('name', 'address');
+
+        $descIndexAfter = array_search(
+            'description',
+            array_keys($this->plainForm->getFields())
+        );
+
+        $addressIndex = array_search(
+            'address',
+            array_keys($this->plainForm->getFields())
+        );
+
+        $this->assertEquals(2, $descIndexAfter);
+        $this->assertEquals(0, $addressIndex);
+
+        $this->assertInstanceOf(
+            'Kris\LaravelFormBuilder\Fields\InputType',
+            $this->plainForm->address
+        );
+    }
+
 
     /** @test */
     public function it_can_remove_existing_fields_from_form_object()
@@ -210,10 +282,10 @@ class FormTest extends FormBuilderTestCase
             $this->plainForm->getModel()
         );
 
-        $this->assertEquals(
-            ['this', 'is', 'some', 'data'],
-            $this->plainForm->getData('some_data')
-        );
+         $this->assertEquals(
+             ['this', 'is', 'some', 'data'],
+             $this->plainForm->getData('some_data')
+         );
 
         $this->assertEquals(
             $this->plainForm->getData(),
@@ -315,6 +387,8 @@ class FormTest extends FormBuilderTestCase
         $customForm = $this->setupForm(new CustomDummyForm());
         $customForm->add('img', 'file');
         $this->request->shouldReceive('old');
+        $model = ['song' => ['body' => 'test body'], 'title' => 'main title'];
+        $form->setModel($model);
 
         $form
             ->add('title', 'text')
@@ -335,7 +409,7 @@ class FormTest extends FormBuilderTestCase
 
         $this->prepareFieldRender('title');
         $this->prepareFieldRender('child_form');
-        $this->prepareRender(Mockery::any(), true, true, true, Mockery::any());
+        $this->prepareRender(Mockery::any(), true, true, true, Mockery::any(), $model);
 
         $this->assertEquals($form, $form->title->getParent());
 
@@ -346,6 +420,8 @@ class FormTest extends FormBuilderTestCase
         $this->assertEquals('song[title]', $form->song->getChild('title')->getName());
         $this->assertCount(2, $form->songs->getChildren());
         $this->assertEquals('lorem', $form->songs->getChild(0)->title->getOption('default_value'));
+        $this->assertEquals('test body', $form->song->body->getOption('default_value'));
+        $this->assertEquals('main title', $form->title->getOption('default_value'));
         $this->assertInstanceOf(
             'Kris\LaravelFormBuilder\Form',
             $form->song->getForm()
@@ -375,11 +451,9 @@ class FormTest extends FormBuilderTestCase
         $this->plainForm
             ->add('name', 'text')
             ->add('address', 'static');
-
         $this->assertEquals('name', $this->plainForm->getField('name')->getName());
         $this->assertEquals('address', $this->plainForm->getField('address')->getName());
         $this->plainForm->setName('test_name')->setModel($model);
-        $this->plainForm->rebuildFields();
         $this->prepareFieldRender('text');
         $this->prepareFieldRender('static');
         $this->prepareRender(Mockery::any(), true, true, true, Mockery::any(), $expectModel);

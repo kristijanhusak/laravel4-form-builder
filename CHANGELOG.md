@@ -1,3 +1,21 @@
+# 1.5.0
+- Bind all fields values manually without Laravel's form builder `Form::model` (Check note below for possible BC break)
+- Add possibility to use Closure as default value for fields which solves issues like in [#98](https://github.com/kristijanhusak/laravel-form-builder/issues/98#issuecomment-103893235)
+- Add `addBefore` and `addAfter` methods to Form class to allow adding fields at specific location
+- Add `required` option for all field types, that adds class `required` (configurable in config) to label, and `required` attribute to field.
+- Rename command from `form:make` to `make:form`
+- Fix passing model to child forms
+- Add `wrapper` option for button type, defaults to false
+- Fix `help_block` rendering twice on repeated field type
+- Fix choice field type adding additional `[]` to the name in child forms/collections
+- Fix choice field type not adding `[]` on regular forms
+- Fix expanded/multiple choice fields id by prefixing it with properly formatted name
+- Set FormBuilder class properties to protected to allow extending
+- Optmization and other minor fixes
+
+**Note**: If You published views before, they need to be updated to prevent possible breaking.
+Since value binding is now done in package, and `Form::model` is removed, views needs to be republished (or updated) to remove `Form::model` from [form.php](https://github.com/kristijanhusak/laravel-form-builder/blob/master/src/views/form.php). Also [choice.php](https://github.com/kristijanhusak/laravel-form-builder/blob/master/src/views/choice.php) needs to be updated to pass `selected` value.
+
 ## 1.4.20
 - Add `help_block` option for fields which renders note under the field (http://getbootstrap.com/css/#forms)
 - Fix repeated type not closing tags properly

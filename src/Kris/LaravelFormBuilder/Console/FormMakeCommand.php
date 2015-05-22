@@ -13,7 +13,7 @@ class FormMakeCommand extends Command
      *
      * @var string
      */
-    protected $name = 'form:make';
+    protected $name = 'make:form';
 
     /**
      * The filesystem instance.
@@ -27,7 +27,7 @@ class FormMakeCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Creates a form builder class.';
+    protected $description = 'Create a form builder class.';
 
     /**
      * @var FormGenerator
