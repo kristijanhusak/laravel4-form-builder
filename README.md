@@ -51,125 +51,6 @@ And Facade (also in `config/app.php`)
 
 ```
 
-### Basic usage
-
-Creating form classes is easy. Lets assume PSR-4 is set for loading namespace `Project` in `app/Project` folder. With a simple artisan command we can create form:
-
-``` sh
-    php artisan make:form app/Project/Forms/PostForm
-```
-
-you create form class in path `app/Project/Forms/PostForm.php` that looks like this:
-
-``` php
-<?php namespace Project\Forms;
-
-use Kris\LaravelFormBuilder\Form;
-
-class PostForm extends Form
-{
-    public function buildForm()
-    {
-        // Add fields here...
-    }
-}
-```
-
-You can add fields which you want when creating command like this:
-
-``` sh
-php artisan make:form app/Project/Forms/SongForm --fields="name:text, lyrics:textarea, publish:checkbox"
-```
-
-And that will create form in path `app/Project/Forms/SongForm.php` with content:
-
-``` php
-<?php namespace Project\Forms;
-
-use Kris\LaravelFormBuilder\Form;
-
-class SongForm extends Form
-{
-    public function buildForm()
-    {
-        $this
-            ->add('name', 'text')
-            ->add('lyrics', 'textarea')
-            ->add('publish', 'checkbox');
-    }
-}
-```
-
-#### Usage in controllers
-
-Forms can be used in controller like this:
-
-``` php
-<?php namespace Project\Http\Controllers;
-
-use Illuminate\Routing\Controller;
-use Kris\LaravelFormBuilder\FormBuilder;
-
-class SongsController extends BaseController {
-
-    protected $formBuilder;
-
-    public function __construct(FormBuilder $formBuilder)
-    {
-        $this->formBuilder = $formBuilder;
-    }
-
-    public function create()
-    {
-        $form = $this->formBuilder->create('Project\Forms\SongForm', [
-            'method' => 'POST',
-            'url' => route('song.store')
-        ]);
-
-        return view('song.create', compact('form'));
-    }
-
-    public function store()
-    {
-    }
-}
-```
-
-#### Usage in views
-
-From controller they can be used in views like this:
-
-``` html
-<!-- resources/views/song/create.blade.php -->
-
-@extend('layouts.master')
-
-@section('content')
-    {{ form($form) }}
-@endsection
-```
-
-`{{ form($form) }}` Will generate this html:
-
-``` html
-<form method="POST" action="http://example.dev/songs">
-    <input name="_token" type="hidden" value="FaHZmwcnaOeaJzVdyp4Ml8B6l1N1DLUDsZmsjRFL">
-    <div class="form-group">
-        <label for="name" class="control-label">name</label>
-        <input type="text" class="form-control" id="name">
-    </div>
-    <div class="form-group">
-        <label for="lyrics" class="control-label">lyrics</label>
-        <textarea name="lyrics" class="form-control"></textarea>
-    </div>
-    <div class="form-group">
-        <label for="publish" class="control-label">publish</label>
-        <input type="checkbox" name="publish" id="publish">
-    </div>
-</form>
-```
-
-
 ### Quick start
 
 Creating form classes is easy. Lets assume PSR-4 is set for loading namespace `App` in `app/Project` folder. With a simple artisan command we can create form:
@@ -272,3 +153,11 @@ Above code will generate this html:
     </div>
 </form>
 ```
+
+### Contributing
+Project follows [PSR-2](http://www.php-fig.org/psr/psr-2/) standard and it's covered with PHPUnit tests.
+Pull requests should include tests and pass [Travis CI](https://travis-ci.org/kristijanhusak/laravel4-form-builder) build.
+
+To run tests first install dependencies with `composer install`.
+
+After that tests can be run with `vendor/bin/phpunit`
