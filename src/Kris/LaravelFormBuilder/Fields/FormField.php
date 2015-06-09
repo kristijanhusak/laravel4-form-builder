@@ -95,7 +95,7 @@ abstract class FormField
             $this->valueClosure = $defaultValue;
         }
 
-        if ((!$defaultValue || $defaultValue instanceof \Closure) && !$isChild) {
+        if (($defaultValue === false || $defaultValue === null || $defaultValue instanceof \Closure) && !$isChild) {
             $this->setValue($this->getModelValueAttribute($this->parent->getModel(), $name));
         } elseif (!$isChild) {
             $this->hasDefault = true;
@@ -300,6 +300,20 @@ abstract class FormField
     public function setOptions($options)
     {
         $this->options = $this->prepareOptions($options);
+
+        return $this;
+    }
+
+    /**
+     * Set single option on the field
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function setOption($name, $value)
+    {
+        $this->options[$name] = $value;
 
         return $this;
     }
