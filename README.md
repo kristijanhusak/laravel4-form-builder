@@ -25,7 +25,7 @@ Changelog can be found [here](https://github.com/kristijanhusak/laravel4-form-bu
 ``` json
 {
     "require": {
-        "kris/laravel4-form-builder": "1.5.*"
+        "kris/laravel4-form-builder": "1.6.*"
     }
 }
 ```
