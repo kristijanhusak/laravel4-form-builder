@@ -525,6 +525,39 @@ class FormTest extends FormBuilderTestCase
 
     }
 
+    /** @test */
+    public function it_disables_all_fields_in_form()
+    {
+        $form = $this->setupForm(new Form());
+
+        $form->add('name', 'text')
+            ->add('email', 'email');
+
+        $this->assertNull($form->name->getOption('attr.disabled'));
+
+        $form->disableFields();
+
+        $this->assertEquals('disabled', $form->name->getOption('attr.disabled'));
+    }
+
+    /** @test */
+    public function it_enables_all_fields_in_form()
+    {
+        $form = $this->setupForm(new Form());
+
+        $form
+            ->add('name', 'text', [
+                'attr' => ['disabled' => 'disabled']
+            ])
+            ->add('email', 'email');
+
+        $this->assertEquals('disabled', $form->name->getOption('attr.disabled'));
+
+        $form->enableFields();
+
+        $this->assertNull($form->name->getOption('attr.disabled'));
+    }
+
     private function prepareRender(
         $formOptions = [],
         $showStart = true,
