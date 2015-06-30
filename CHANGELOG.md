@@ -1,3 +1,8 @@
+## 1.6.11
+- Fix checkables checked state not working with model
+- Fix adding `for` attribute twice to label
+- Add some tests
+
 ## 1.6.10
 - add `disableFields` and `enableFields` functions to Form class to allow disabling all fields in the form
 - Fix collection type model value binding
